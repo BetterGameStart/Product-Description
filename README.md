@@ -64,5 +64,5 @@ npm start
 |-----------| --------------------------- | ---------------------------- |
 | **POST**  |       /api/games/:id        |  CREATE a new item into DB   |
 | **GET**   |       /api/games/:id        |  READ data and return data   |
-| **PATCH** |       /api/games/:id        |  UPDATE item with new image  |
+| **PUT**   |       /api/games/:id        |  UPDATE item with new image  |
 | **DELETE**|       /api/games/:id        |  DELETE item based on ID     |
