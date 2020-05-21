@@ -62,7 +62,7 @@ npm start
 ## CRUD Operations
 | HTTP Verb |           Endpoint          |            Action            |
 |-----------| --------------------------- | ---------------------------- |
-| **POST**  |         /api/items/         |  CREATE a new item into DB   |
-| **GET**   |       /api/items/:id        |  READ data and return data   |
-| **PATCH** |       /api/items/:id        |  UPDATE item with new image  |
-| **DELETE**|       /api/items/:id        |  DELETE item based on ID     |
+| **POST**  |       /api/games/:id        |  CREATE a new item into DB   |
+| **GET**   |       /api/games/:id        |  READ data and return data   |
+| **PATCH** |       /api/games/:id        |  UPDATE item with new image  |
+| **DELETE**|       /api/games/:id        |  DELETE item based on ID     |
