@@ -105,9 +105,14 @@ function seed() {
 //= ============ create table 'games' ==================================================
 function createTable() {
   pool.query('CREATE TABLE games (id varchar(10), name VARCHAR(100), details varchar(3000), images varchar(500))', (err, res) => {
-    console.log(err || 'created table!');
-    generateData();
-    pool.end();
+    if (err) {
+      console.log(err);
+      pool.end();
+    } else {
+      console.log('created table!');
+      generateData();
+      pool.end();
+    }
   });
 }
 //= ===================================================================================
