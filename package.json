@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "schema": "psql -h localhost -d games -U postgres -f schema.sql",
     "seed2": "node --max-old-space-size=35000 server/postgresIndex.js",
+    "generateData": "node server/postgresDataSeed.js",
     "build": "webpack",
     "seed": "node server/seed.js",
     "start": "nodemon server/index.js --ignore 'client/' --ignore 'public/'",
