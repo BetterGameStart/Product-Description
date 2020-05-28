@@ -2,7 +2,10 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const faker = require('faker');
+const pgtools = require('pgtools');
+const { Pool } = require('pg');
 const db = require('./database/index.js');
+const pgdb = require('./database/pgdb.js');
 
 let imageCounter = 1;
 
@@ -32,46 +35,81 @@ app.use(express.json());
 
 app.get('/api/games/:id', (req, res) => {
   let id = Number(path.basename(req.url));
-  if (id < 0 || id > 100) {
+  if (id < 0 || id > 9999999) {
     id = 1;
   }
-  db.getGame(id, (err, result) => {
+  pgdb.getGame(id, (err, result) => {
     if (err) {
       res.sendStatus(500);
       res.end();
     } else {
-      res.send(result);
+      const newObj = result.rows[0];
+      const newImageArr = newObj.images.split('NEXT');
+      newImageArr.shift();
+      newObj.images = newImageArr;
+
+
+      res.send([newObj]);
       res.end();
     }
   });
 });
 
-app.post('/api/games/:id', (req, res) => {
-  res.sendStatus(200);
-  const ID = Number(path.basename(req.url));
-  if (ID < 0 || ID > 100) {
-    ID = 1;
-  }
-  const fillData = () => {
-    const data = [];
-    const newGame = new db.Game({
-      id: ID,
-      name: faker.commerce.productName(),
-      details: faker.lorem.paragraphs(3),
-      images: getRandomImages(),
-    });
-    data.push(newGame);
-    return data;
-  };
-  async function seed() {
-    const data = fillData();
-    for (const game of data) {
-      await db.save(game);
-    }
-    console.log('success');
-  }
-  seed();
+// old post req handler===========================================
+// app.post('/api/games/:id', (req, res) => {
+//   res.sendStatus(200);
+//   let ID = Number(path.basename(req.url));
+//   if (ID < 0 || ID > 9999999) {
+//     ID = 1;
+//   }
+
+//   const fillData = () => {
+//     const data = [];
+//     const newGame = new db.Game({
+//       id: ID,
+//       name: faker.commerce.productName(),
+//       details: faker.lorem.paragraphs(3),
+//       images: getRandomImages(),
+//     });
+//     data.push(newGame);
+//     return data;
+//   };
+//   async function seed() {
+//     const data = fillData();
+//     for (const game of data) {
+//       await db.save(game);
+//     }
+//     console.log('success');
+//   }
+//   seed();
+// });
+const pool = new Pool({
+  user: 'postgres',
+  host: 'localhost',
+  database: 'games22',
+  password: 'samaung1',
+  port: 5432,
 });
+
+app.post('/api/games/:id', (req, res) => {
+  pool.connect((err, client, done) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.sendStatus(200);
+      const ID = Number(path.basename(req.url));
+      const query = `INSERT INTO games22 (name, details, images) VALUES ('${faker.commerce.productName()}', '${faker.lorem.paragraph()}','${getRandomImages()}')`;
+      client.query(query, (err, res) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log('inserted new row!');
+        }
+      });
+    }
+  });
+});
+
 
 app.delete('/api/games/:id', (req, res) => {
   res.sendStatus(200);

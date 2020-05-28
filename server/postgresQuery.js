@@ -23,7 +23,7 @@ let start;
 pool.connect();
 
 function query() {
-  pool.query('SELECT * FROM games22 where id = 9900000', (error, results) => {
+  pool.query('SELECT * FROM games22 where name LIKE "1234567899%"', (error, results) => {
     if (i === 0) {
       start = new Date().getTime();
     }
@@ -31,7 +31,7 @@ function query() {
     if (error) {
       throw error;
     }
-    if (i === 99999) {
+    if (i === 99) {
       const elapsed = new Date().getTime() - start;
       console.log(`Queries made: ${i}`);
       console.log('time elapsed: ', `${elapsed} milliseconds`);
@@ -39,6 +39,6 @@ function query() {
     }
   });
 }
-for (let j = 0; j < 100000; j++) {
+for (let j = 0; j < 100; j++) {
   query();
 }
