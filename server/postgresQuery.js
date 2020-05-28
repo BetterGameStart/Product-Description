@@ -1,7 +1,6 @@
 const pgtools = require('pgtools');
 const { Pool } = require('pg');
 const faker = require('faker');
-const pool = require('./pool.js');
 
 const config = {
   user: 'postgres',
@@ -10,85 +9,36 @@ const config = {
   port: 5432,
 };
 
-let imageCounter = 1;
-const getRandomImages = () => {
-  const results = [];
-  const limit = faker.random.number({ min: 4, max: 7 });
+const pool = new Pool({
+  user: 'postgres',
+  host: 'localhost',
+  database: 'games22',
+  password: 'samaung1',
+  port: 5432,
+});
 
-  for (let j = 0; j < limit; j += 1) {
-    const imgURL = `https://aragorn-images.s3-us-west-2.amazonaws.com/${imageCounter}.jpg`;
-    results.push(imgURL);
-    imageCounter += 1;
-    if (imageCounter > 30) {
-      imageCounter = 1;
+let i = 0;
+let start;
+
+pool.connect();
+
+function query() {
+  pool.query('SELECT * FROM games22 where id = 9900000', (error, results) => {
+    if (i === 0) {
+      start = new Date().getTime();
     }
-  }
-  return results;
-};
-
-let count = 1;
-
-function createDatabase() {
-  pgtools.createdb(config, 'games', (err, res) => {
-    if (err) {
-      console.log('database already exists! - dropping database!');
-      pgtools.dropdb(config, 'games', (err, res) => {
-        if (err) {
-          console.error(err);
-          process.exit(-1);
-        }
-        count++;
-        createDatabase();
-      });
-    }
-    setTimeout(() => {
-      console.log('created database!');
-      createTable();
-    }, 3000);
-  });
-}
-if (count === 1) {
-  count++;
-  createDatabase();
-}
-
-function createTable() {
-  pool.pool.query('CREATE TABLE games (id varchar(10), name VARCHAR(100), details varchar(3000), images varchar(500))', (err, res) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log('created table!');
-      seed();
-      pool.end();
-    }
-  });
-}
-
-
-function seed() {
-  for (let i = 0; i < 1000; i++) {
-    const query = `INSERT INTO games VALUES ('${i}', '${faker.commerce.productName()}', '${faker.lorem.paragraphs(3)}', '${getRandomImages()}')`;
-    pool.pool.query(query, (err, res) => {
-      if (err) {
-        console.log(err);
-      }
-    });
-    if (i === 999) {
-      console.log('done seeding');
-      queryAll();
-      // process.exit();
-    }
-  }
-}
-seed();
-
-function queryAll() {
-  pool.pool.query('SELECT * FROM games', (error, results) => {
+    i++;
     if (error) {
       throw error;
     }
-    console.log(results);
-    process.exit();
+    if (i === 99999) {
+      const elapsed = new Date().getTime() - start;
+      console.log(`Queries made: ${i}`);
+      console.log('time elapsed: ', `${elapsed} milliseconds`);
+      process.exit();
+    }
   });
 }
-// queryAll();
+for (let j = 0; j < 100000; j++) {
+  query();
+}
