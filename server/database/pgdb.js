@@ -40,11 +40,11 @@ const save = (game) => {
 
 
 const getGame = (id, cb) => {
-  pool.query(`SELECT * FROM games22 where id = ${id}`, (error, results) => {
-    if (error) {
+  pool.query(`SELECT * FROM games22 where id = ${id}`, (err, res) => {
+    if (err) {
       return cb(err, null);
     }
-    return cb(null, results);
+    return cb(null, res);
   });
 };
 

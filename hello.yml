@@ -1,0 +1,37 @@
+config:
+  target: "http://localhost:3004"
+  processor: "./my-functions.js"
+  phases:
+    - duration: 10
+      arrivalRate: 1
+      name: "warm up"
+    - duration: 10
+      arrivalRate: 10
+      name: "10 per sec"
+    - duration: 120
+      arrivalRate: 100
+      name: "100 per sec"
+    - duration: 30
+      arrivalRate: 1000
+      name: "1000 per sec"
+  defaults:
+    headers:
+      x-my-service-auth: "987401838271002188298567"
+scenarios:
+  - name: "post request"
+    weight: 40
+    flow:
+      # call generateRandomData() to create the name, email, and password variables
+      - function: "generateRandomData"
+      - post:
+          url: "/api/games/126345678"
+          json:
+            name: "{{ name }}"
+            details: "{{ details }}"
+            images: "{{ images }}"
+  - name: "get request"
+    weight: 60
+    flow:
+      - function: "getRandomPage"
+      - get:
+          url: "/api/games/{{id}}"
