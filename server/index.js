@@ -1,3 +1,4 @@
+const nr = require('newrelic');
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -33,6 +34,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/games/:id', express.static('public'));
 app.use(express.json());
 
+let getCounter = 0;
+
 app.get('/api/games/:id', (req, res) => {
   let id = Number(path.basename(req.url));
   if (id < 0 || id > 9999999) {
@@ -40,9 +43,12 @@ app.get('/api/games/:id', (req, res) => {
   }
   pgdb.getGame(id, (err, result) => {
     if (err) {
+      console.log('err');
       res.sendStatus(500);
       res.end();
     } else {
+      // console.log(`successful get request number ${getCounter}`);
+      getCounter++;
       const newObj = result.rows[0];
       const newImageArr = newObj.images.split('NEXT');
       newImageArr.shift();
@@ -91,6 +97,8 @@ const pool = new Pool({
   port: 5432,
 });
 
+let postCounter = 0;
+
 app.post('/api/games/:id', (req, res) => {
   pool.connect((err, client, done) => {
     if (err) {
@@ -100,10 +108,12 @@ app.post('/api/games/:id', (req, res) => {
       const ID = Number(path.basename(req.url));
       const query = `INSERT INTO games22 (name, details, images) VALUES ('${faker.commerce.productName()}', '${faker.lorem.paragraph()}','${getRandomImages()}')`;
       client.query(query, (err, res) => {
+        done();
         if (err) {
           console.log(err);
         } else {
-          console.log('inserted new row!');
+          // console.log(`inserted new row! ${postCounter}`);
+          postCounter++;
         }
       });
     }
