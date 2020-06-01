@@ -4,16 +4,25 @@ config:
   phases:
     - duration: 10
       arrivalRate: 1
-      name: "warm up"
-    - duration: 10
-      arrivalRate: 10
-      name: "10 per sec"
-    - duration: 120
-      arrivalRate: 100
-      name: "100 per sec"
+      name: "Warm up"
+    - pause: 20
     - duration: 30
-      arrivalRate: 1000
-      name: "1000 per sec"
+      arrivalRate: 1
+      rampTo: 10
+      maxVusers: 10
+      name: "10 users"
+    - pause: 30
+    - duration: 30
+      arrivalRate: 10
+      rampTo: 100
+      maxVusers: 100
+      name: "100 users"
+    - pause: 60
+    - duration: 180
+      arrivalRate: 100
+      rampTo: 1000
+      maxVusers: 1000
+      name: "Sustained max load at 1K"
   defaults:
     headers:
       x-my-service-auth: "987401838271002188298567"
