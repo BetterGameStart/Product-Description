@@ -1,29 +1,15 @@
 const pgtools = require('pgtools');
 const { Pool } = require('pg');
 const faker = require('faker');
-
-const config = {
-  user: 'postgres',
-  host: 'localhost',
-  password: 'samaung1',
-  port: 5432,
-};
-
-const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'games22',
-  password: 'samaung1',
-  port: 5432,
-});
+const config = require('./database/config.js');
 
 let i = 0;
 let start;
 
-pool.connect();
+config.pool.connect();
 
 function query() {
-  pool.query('SELECT * FROM games22 where name LIKE "1234567899%"', (error, results) => {
+  config.pool.query('SELECT * FROM games22 where name LIKE "1234567899%"', (error, results) => {
     if (i === 0) {
       start = new Date().getTime();
     }

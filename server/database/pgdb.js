@@ -1,22 +1,8 @@
 const pgtools = require('pgtools');
 const { Pool } = require('pg');
+const config = require('./config.js');
 
-const config = {
-  user: 'postgres',
-  host: 'localhost',
-  password: 'samaung1',
-  port: 5432,
-};
-
-const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'games22',
-  password: 'samaung1',
-  port: 5432,
-});
-
-pool.connect();
+config.pool.connect();
 
 // refactor
 const save = (game) => {
@@ -40,7 +26,7 @@ const save = (game) => {
 
 
 const getGame = (id, cb) => {
-  pool.query(`SELECT * FROM games22 where id = ${id}`, (err, res) => {
+  config.pool.query(`SELECT * FROM games22 where id = ${id}`, (err, res) => {
     if (err) {
       return cb(err, null);
     }
@@ -61,7 +47,7 @@ const deleteAll = () => new Promise((resolve, reject) => {
 });
 
 // function query() {
-//   pool.query('SELECT * FROM games22 where id = 9900000', (error, results) => {
+//   config.pool.query('SELECT * FROM games22 where id = 9900000', (error, results) => {
 //     if (i === 0) {
 //       start = new Date().getTime();
 //     }

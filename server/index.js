@@ -7,6 +7,7 @@ const pgtools = require('pgtools');
 const { Pool } = require('pg');
 const db = require('./database/index.js');
 const pgdb = require('./database/pgdb.js');
+const config = require('./database/config.js');
 
 let imageCounter = 1;
 
@@ -89,18 +90,11 @@ app.get('/api/games/:id', (req, res) => {
 //   }
 //   seed();
 // });
-const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'games22',
-  password: 'samaung1',
-  port: 5432,
-});
 
 let postCounter = 0;
 
 app.post('/api/games/:id', (req, res) => {
-  pool.connect((err, client, done) => {
+  config.pool.connect((err, client, done) => {
     if (err) {
       console.log(err);
     } else {
