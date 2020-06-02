@@ -6,6 +6,7 @@ const path = require('path');
 const config = require('./database/config.js');
 
 let imageCounter = 1;
+let refreshCounter = 0;
 
 const getRandomImages = () => {
   let results = '';
@@ -26,6 +27,15 @@ let currentRow = 0;
 const idCounter = 0;
 
 function seedPostgres() {
+console.log('seeding...');
+/*
+setTimeout(() => {
+refreshCounter++;
+console.log('refresh number ' + refreshCounter + ' / 200');
+seedPostgres();
+return;
+}, 180000)
+*/
   const stream = fs.createReadStream(path.join(__dirname, '/../games.csv'));
   const csvData = [];
   const csvStream = fastcsv
@@ -40,19 +50,37 @@ function seedPostgres() {
       let counter = 0;
       function loop() {
         config.pool.connect((err, client, done) => {
-          if (err) throw err;
-          try {
+          if (err) {
+ console.log('error?: ', err)
+}
             for (let i = 0; i < 5000; i++) {
+function miniSeed () {
               const query = `INSERT INTO games22 (name, details, images) VALUES ('${faker.commerce.productName()}', '${faker.lorem.paragraph()}','${getRandomImages()}')`;
               client.query(query, (err, res) => {
                 currentRow++;
                 if (err) {
-                  console.log(err);
+                  console.log('error!!!: ', err);
+return;
                 } else {
                   if (currentRow % 10000 === 0) {
                     counter++;
                     console.log(`${counter}/1000 done seeding...`);
                   }
+miniSeed();
+/*
+if(Number(counter)/1000 === 5) {
+console.log('refreshing...');
+if(refreshCounter < 200) {
+console.log(refreshCounter + ' / 200 done seeding');
+refreshCounter++;
+seedPostgres();
+return;
+} else {
+console.log('done seeding!');
+process.exit();
+}
+}
+*/
                   if (i === 4999) {
                     loop();
                   }
@@ -60,9 +88,12 @@ function seedPostgres() {
                     console.log('DONE SEEDING!!!');
                     process.exit();
                   }
+
                 }
               });
             }
+miniSeed();
+}
           // csvData.forEach((row) => {
           //   client.query(query, row, (err, res) => {
           //     if (err) {
@@ -75,9 +106,9 @@ function seedPostgres() {
           //     }
           //   });
           // });
-          } finally {
-            done();
-          }
+        
+        
+          
         });
       }
       loop();
@@ -85,7 +116,7 @@ function seedPostgres() {
 
   stream.pipe(csvStream);
 }
-
+seedPostgres();
 module.exports = {
   seedPostgres,
 };

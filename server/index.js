@@ -96,7 +96,7 @@ let postCounter = 0;
 app.post('/api/games/:id', (req, res) => {
   config.pool.connect((err, client, done) => {
     if (err) {
-      console.log(err);
+      console.log('error!!!!!: ', err);
     } else {
       res.sendStatus(200);
       const ID = Number(path.basename(req.url));

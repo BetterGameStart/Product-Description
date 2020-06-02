@@ -3,10 +3,11 @@ const { Pool } = require('pg');
 const generateCsv = require('./postgresDataSeed');
 const seedPostgres = require('./csvSeed.js');
 const config = require('./database/config.js');
-
-
+/*
 setTimeout(() => {
+console.log('hello?');
   pgtools.dropdb(config.config, 'games22', (err, res) => {
+console.log('hi?');
     if (err) {
       // console.log(err);
       console.log('nothing to drop');
@@ -15,10 +16,12 @@ setTimeout(() => {
     }
   });
 }, 1000);
-
+*/
 
 function createDatabase() {
+console.log('hello?');
   pgtools.createdb(config.config, 'games22', (err, res) => {
+console.log('hi?');
     if (err) {
       console.log(err);
     } else {
@@ -29,7 +32,7 @@ function createDatabase() {
     }
   });
 }
-setTimeout(() => { createDatabase(); }, 2000);
+setTimeout(() => { createDatabase(); }, 10000);
 
 
 let counter = 0;
