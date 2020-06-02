@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/games', { useUnifiedTopology: true, useNewUrlParser: true });
+// mongoose.connect('mongodb://localhost/games', { useUnifiedTopology: true, useNewUrlParser: true });
 
 const gameSchema = new mongoose.Schema({
   id: Number,

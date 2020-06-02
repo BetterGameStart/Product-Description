@@ -3,6 +3,7 @@ const fastcsv = require('fast-csv');
 const { Pool } = require('pg');
 const faker = require('faker');
 const path = require('path');
+const config = require('./database/config.js');
 
 let imageCounter = 1;
 
@@ -38,15 +39,7 @@ function seedPostgres() {
 
       let counter = 0;
       function loop() {
-        const pool = new Pool({
-          user: 'postgres',
-          host: 'localhost',
-          database: 'games22',
-          password: 'samaung1',
-          port: 5432,
-        });
-
-        pool.connect((err, client, done) => {
+        config.pool.connect((err, client, done) => {
           if (err) throw err;
           try {
             for (let i = 0; i < 5000; i++) {
