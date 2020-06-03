@@ -33,6 +33,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/games/:id', express.static('public'));
+app.use('/', express.static('public'));
 app.use(express.json());
 
 let getCounter = 0;
