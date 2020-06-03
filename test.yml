@@ -1,5 +1,5 @@
 config:
-  target: "http://localhost:3004"
+  target: "http://34.203.77.85:3004"
   processor: "./my-functions.js"
   phases:
     - duration: 10

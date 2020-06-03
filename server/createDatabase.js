@@ -32,7 +32,7 @@ console.log('hi?');
     }
   });
 }
-setTimeout(() => { createDatabase(); }, 10000);
+//setTimeout(() => { createDatabase(); }, 10000);
 
 
 let counter = 0;
@@ -46,7 +46,7 @@ function createTable() {
         console.log('created table!');
         // generateCsv.generateCsv();
         //= =====jumping straight to seeding for now=============
-        seedPostgres.seedPostgres();
+      
         //= =====================================================
         // config.pool.end();
         // process.exit();
@@ -54,3 +54,4 @@ function createTable() {
     });
   }
 }
+//createTable();
